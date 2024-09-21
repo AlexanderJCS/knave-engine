@@ -11,8 +11,115 @@ import java.util.Queue;
 
 public class TestRPN {
     @Test
-    public void complexTests() {
-        Tokens tokens = new Tokens("a > a = b");
+    public void notTest() {
+        Tokens tokens = new Tokens("!(a)");
+        ReversePolishNotation rpn = new ReversePolishNotation(tokens);
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+        }}));
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+        }}));
+    }
+
+    @Test
+    public void andTest() {
+        Tokens tokens = new Tokens("a & b");
+        ReversePolishNotation rpn = new ReversePolishNotation(tokens);
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+            put("b", true);
+        }}));
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+            put("b", false);
+        }}));
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+            put("b", true);
+        }}));
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+            put("b", false);
+        }}));
+    }
+
+    @Test
+    public void orTest() {
+        Tokens tokens = new Tokens("a | b");
+        ReversePolishNotation rpn = new ReversePolishNotation(tokens);
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+            put("b", true);
+        }}));
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+            put("b", false);
+        }}));
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+            put("b", true);
+        }}));
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+            put("b", false);
+        }}));
+    }
+
+    @Test
+    public void equalsTest() {
+        Tokens tokens = new Tokens("a = b");
+        ReversePolishNotation rpn = new ReversePolishNotation(tokens);
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+            put("b", true);
+        }}));
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+            put("b", false);
+        }}));
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+            put("b", true);
+        }}));
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+            put("b", false);
+        }}));
+    }
+
+    @Test
+    public void notAndOrEqualsTest() {
+        Tokens tokens = new Tokens("!(a & b) | c = d");
+        ReversePolishNotation rpn = new ReversePolishNotation(tokens);
+
+        System.out.println(rpn.getRPN());
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+            put("b", true);
+            put("c", false);
+            put("d", false);
+        }}));
+    }
+
+    @Test
+    public void impliesTest1() {
+        Tokens tokens = new Tokens("a > b");
         ReversePolishNotation rpn = new ReversePolishNotation(tokens);
 
         Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
@@ -34,16 +141,19 @@ public class TestRPN {
             put("a", false);
             put("b", true);
         }}));
+    }
 
-        tokens = new Tokens("a > (a = b)");
-        rpn = new ReversePolishNotation(tokens);
+    @Test
+    public void impliesTest2() {
+        Tokens tokens = new Tokens("a > (a = b)");
+        ReversePolishNotation rpn = new ReversePolishNotation(tokens);
 
         Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
             put("a", false);
             put("b", false);
         }}));
 
-        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
             put("a", true);
             put("b", true);
         }}));
@@ -57,9 +167,40 @@ public class TestRPN {
             put("a", false);
             put("b", true);
         }}));
+    }
 
-        tokens = new Tokens("(a > a = b) & (!a > !(a = b)");
-        rpn = new ReversePolishNotation(tokens);
+    @Test
+    public void impliesTest3() {
+        Tokens tokens = new Tokens("a > !(a = b)");
+        ReversePolishNotation rpn = new ReversePolishNotation(tokens);
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+            put("b", false);
+        }}));
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+            put("b", true);
+        }}));
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+            put("b", false);
+        }}));
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+            put("b", true);
+        }}));
+    }
+
+    @Test
+    public void impliesTest4() {
+        Tokens tokens = new Tokens("(a > (a = b)) & (!a > !(a = b))");
+        ReversePolishNotation rpn = new ReversePolishNotation(tokens);
+
+        System.out.println(rpn.getRPN());
 
         Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
             put("a", false);
