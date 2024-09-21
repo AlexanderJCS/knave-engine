@@ -44,7 +44,13 @@ public class ReversePolishNotation {
         }
 
         while (!stack.isEmpty()) {
-            output.add(stack.pop());
+            Token token = stack.pop();
+
+            if (token.type() == TokenType.OPEN_PAREN || token.type() == TokenType.CLOSE_PAREN) {
+                throw new RuntimeException("Invalid RPN expression: Mismatched parentheses");
+            }
+
+            output.add(token);
         }
 
         return output;
@@ -98,8 +104,6 @@ public class ReversePolishNotation {
                     stack.push(!p || q);
                 } else if (token.type() == TokenType.EQUALS) {
                     stack.push(p == q);
-                } else {
-                    throw new RuntimeException("Unknown token type: " + token.type());
                 }
             }
         }
