@@ -4,10 +4,10 @@ import knaveengine.ast.ReversePolishNotation;
 import knaveengine.token.Tokens;
 import knaveengine.truthtable.TruthTable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.*;
 
 public class UI {
 
@@ -16,9 +16,19 @@ public class UI {
      */
     public static void run() {
         List<String> claims = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
 
-        claims.add("a = b");
-        claims.add("!(a = b)");
+        String input = "";
+        while (!input.equalsIgnoreCase("end")) {
+            char thisChar = (char) ('a' + claims.size());
+
+            System.out.print("Enter a claim for character " + thisChar + " (or 'end' to finish): ");
+            input = scanner.nextLine();
+
+            if (!input.equalsIgnoreCase("end")) {
+                claims.add(input);
+            }
+        }
 
         List<String> truthTableStatements = new ArrayList<>(claims.size());
         for (int i = 0; i < claims.size(); i++) {
