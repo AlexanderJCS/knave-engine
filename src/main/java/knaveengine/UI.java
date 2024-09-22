@@ -40,7 +40,6 @@ public class UI {
 
         List<ReversePolishNotation> rpnList = new ArrayList<>();
         for (String statement : truthTableStatements) {
-            System.out.println(statement);
             rpnList.add(new ReversePolishNotation(new Tokens(statement)));
         }
 
