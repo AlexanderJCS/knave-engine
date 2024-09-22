@@ -11,6 +11,31 @@ import java.util.Queue;
 
 public class TestRPN {
     @Test
+    public void trueFalseTest() {
+        Tokens tokens = new Tokens("a = T");
+        ReversePolishNotation rpn = new ReversePolishNotation(tokens);
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+        }}));
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+        }}));
+
+        tokens = new Tokens("a = F");
+        rpn = new ReversePolishNotation(tokens);
+
+        Assert.assertFalse(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", true);
+        }}));
+
+        Assert.assertTrue(rpn.evaluate(new java.util.HashMap<>() {{
+            put("a", false);
+        }}));
+    }
+
+    @Test
     public void notTest() {
         Tokens tokens = new Tokens("!(a)");
         ReversePolishNotation rpn = new ReversePolishNotation(tokens);

@@ -64,7 +64,7 @@ public class ReversePolishNotation {
         Set<String> variables = new HashSet<>();
 
         for (Token token : this.rpn) {
-            if (token.type() == TokenType.VAR) {
+            if (token.type() == TokenType.VAR && !token.value().equals("F") && !token.value().equals("T")) {
                 variables.add(token.value());
             }
         }
@@ -77,11 +77,14 @@ public class ReversePolishNotation {
 
         for (Token token : this.rpn) {
             if (token.type() == TokenType.VAR) {
-                stack.push(values.get(token.value()));
-
-                if (stack.peek() == null) {
-                    throw new RuntimeException("Variable " + token.value() + " is not defined");
+                if (token.value().equals("F")) {
+                    stack.push(false);
+                } else if (token.value().equals("T")) {
+                    stack.push(true);
+                } else {
+                    stack.push(values.get(token.value()));
                 }
+
 
             } else if (token.type() == TokenType.NOT) {
                 stack.push(!stack.pop());
