@@ -84,8 +84,6 @@ public class ReversePolishNotation {
                 } else {
                     stack.push(values.get(token.value()));
                 }
-
-
             } else if (token.type() == TokenType.NOT) {
                 stack.push(!stack.pop());
             } else {
