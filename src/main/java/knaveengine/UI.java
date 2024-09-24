@@ -35,7 +35,7 @@ public class UI {
             char thisChar = (char) ('a' + i);
             String claim = claims.get(i);
 
-            truthTableStatements.add("(" + thisChar + " > (" +claim + "))" + " & (!(" + thisChar + ") > !(" + claim + "))");
+            truthTableStatements.add("(" + thisChar + " > (" + claim + "))" + " & (!(" + thisChar + ") > !(" + claim + "))");
         }
 
         List<ReversePolishNotation> rpnList = new ArrayList<>();
