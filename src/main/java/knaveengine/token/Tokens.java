@@ -13,6 +13,21 @@ public class Tokens {
         return new ArrayList<>(this.tokens);
     }
 
+    public boolean validateParenthesis() {
+        int openParenCount = 0;
+        int closeParenCount = 0;
+
+        for (Token token : this.tokens) {
+            if (token.type() == TokenType.OPEN_PAREN) {
+                openParenCount++;
+            } else if (token.type() == TokenType.CLOSE_PAREN) {
+                closeParenCount++;
+            }
+        }
+
+        return openParenCount == closeParenCount;
+    }
+
     private static ArrayList<Token> tokenize(String input) {
         ArrayList<Token> tokens = new ArrayList<>();
 

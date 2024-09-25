@@ -6,7 +6,15 @@ import knaveengine.token.TokenType;
 
 import java.util.*;
 
+
+/**
+ * Parses and evaluates a Tokens object as Reverse Polish Notation.
+ */
 public class ReversePolishNotation {
+    /**
+     * Operator precedence. Key: the operator. Value: the precedence. Higher precedence value means that the operator is
+     * evaluated first.
+     */
     private static final HashMap<TokenType, Integer> PRECEDENCE = new HashMap<>(){{
         put(TokenType.NOT, 4);
         put(TokenType.AND, 3);
@@ -18,9 +26,18 @@ public class ReversePolishNotation {
     private final Queue<Token> rpn;
 
     public ReversePolishNotation(Tokens tokens) {
+        if (!tokens.validateParenthesis()) {
+            throw new RuntimeException("Invalid infix expression: Mismatched parentheses");
+        }
+
         this.rpn = genRPN(tokens);
     }
 
+    /**
+     * Implements the Shunting Yard Algorithm to convert tokenized infix notation to Reverse Polish Notation.
+     * @param tokens The tokenized infix notation.
+     * @return The tokenized Reverse Polish Notation.
+     */
     private static Queue<Token> genRPN(Tokens tokens) {
         Stack<Token> stack = new Stack<>();
         Queue<Token> output = new LinkedList<>();
@@ -46,6 +63,8 @@ public class ReversePolishNotation {
         while (!stack.isEmpty()) {
             Token token = stack.pop();
 
+            // This should not happen because the infix expression is already validated to have matching parentheses.
+            // But just in case it does happen, we throw an exception.
             if (token.type() == TokenType.OPEN_PAREN || token.type() == TokenType.CLOSE_PAREN) {
                 throw new RuntimeException("Invalid RPN expression: Mismatched parentheses");
             }
@@ -56,10 +75,18 @@ public class ReversePolishNotation {
         return output;
     }
 
+    /**
+     * Get a copy of the RPN expression.
+     * @return A copy of the RPN expression.
+     */
     public Queue<Token> getRPN() {
         return new LinkedList<>(this.rpn);
     }
 
+    /**
+     * Get all the variables in the RPN expression.
+     * @return A set of all the variables in the RPN expression.
+     */
     public Set<String> getAllVariables() {
         Set<String> variables = new HashSet<>();
 
@@ -72,8 +99,26 @@ public class ReversePolishNotation {
         return variables;
     }
 
+    /**
+     * Evaluate the RPN expression with the given values for the variables. Variables "T" and "F" will be evaluated as
+     * true and false respectively.
+     *
+     * @param values The values for the variables. Key: the variable name. Value: the value of the variable.
+     * @return The result of the RPN expression.
+     */
     public boolean evaluate(HashMap<String, Boolean> values) {
         Stack<Boolean> stack = new Stack<>();
+
+        /*
+         * Evaluating the RPN can be done using a simple algorithm utilizing a single stack. It iterates through the RPN and does the following:
+         * - If the token is a variable, push the value of the variable onto the stack.
+         *    If the variable's value is 'T' or 'F', evaluate it as 'true' or 'false' respectively.
+         * - If the token is the not operator, pop the last value of the stack, invert it,
+         *    and push it back onto the stack.
+         * - If the token is any other operator, pop the last two values of the stack, perform the operation,
+         *    and push the output back onto the stack. This should reduce the stack size by 1, since the operator
+         *    requires 2 inputs and only provides 1 output.
+         */
 
         for (Token token : this.rpn) {
             if (token.type() == TokenType.VAR) {

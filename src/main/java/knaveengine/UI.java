@@ -4,9 +4,6 @@ import knaveengine.ast.ReversePolishNotation;
 import knaveengine.token.Tokens;
 import knaveengine.truthtable.TruthTable;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.*;
 
 public class UI {
@@ -52,7 +49,7 @@ public class UI {
         } else {
             for (java.util.Map<String, Boolean> state : possibleStates) {
                 for (String variable : state.keySet()) {
-                    System.out.print(variable + ": " + (state.get(variable) ? "Knight" : "Knave") + " | ");
+                    System.out.print(variable + " is a " + (state.get(variable) ? "Knight" : "Knave") + ", ");
                 }
 
                 System.out.println();
